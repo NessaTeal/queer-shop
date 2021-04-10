@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { allFlags } from "./flag/Flag";
-import { FlagComponent } from "./flag/FlagComponent";
+import { createIncompleteFlag, updateIncompleteFlag } from "./flag/Flag";
+import { IncompleteFlagComponent } from "./flag/IncompleteFlagComponent";
+import { RainbowFlag } from "./flag/RainbowFlag";
 
-const App = () => (
-  <>
-    {allFlags.map((flag, index) => (
-      <div key={index} style={{ padding: "4px" }}>
-        <FlagComponent flag={flag} />
-      </div>
-    ))}
-  </>
-);
+let lastTimestamp = 0;
+
+const App = () => {
+  const [flag, setFlag] = useState(createIncompleteFlag(RainbowFlag));
+
+  useEffect(() => {
+    const gameloop = (timestamp: number) => {
+      const delta = timestamp - lastTimestamp;
+      lastTimestamp = timestamp;
+      setFlag((flag) => updateIncompleteFlag(flag, delta));
+      requestAnimationFrame(gameloop);
+    };
+
+    requestAnimationFrame(gameloop);
+  }, []);
+
+  return <IncompleteFlagComponent flag={flag} />;
+};
 
 ReactDOM.render(
   <React.StrictMode>
