@@ -1,26 +1,39 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { createIncompleteFlag, updateIncompleteFlag } from "./flag/Flag";
+import { createIncompleteFlag } from "./flag/Flag";
 import { IncompleteFlagComponent } from "./flag/IncompleteFlagComponent";
 import { RainbowFlag } from "./flag/RainbowFlag";
+import { increaseSpeed, updateGameState } from "./game-state";
 
 let lastTimestamp = 0;
 
 const App = () => {
-  const [flag, setFlag] = useState(createIncompleteFlag(RainbowFlag));
+  const [gameState, setGameState] = useState({
+    flag: createIncompleteFlag(RainbowFlag),
+    fillSpeed: 0.001,
+    money: 0,
+  });
 
   useEffect(() => {
     const gameloop = (timestamp: number) => {
       const delta = timestamp - lastTimestamp;
       lastTimestamp = timestamp;
-      setFlag((flag) => updateIncompleteFlag(flag, delta));
+      setGameState((gameState) => updateGameState(gameState, delta));
       requestAnimationFrame(gameloop);
     };
 
     requestAnimationFrame(gameloop);
   }, []);
 
-  return <IncompleteFlagComponent flag={flag} />;
+  return (
+    <>
+      <div>Money: {gameState.money}</div>
+      <button onClick={() => setGameState(increaseSpeed(gameState))}>
+        Increase speed (cost 1)
+      </button>
+      <IncompleteFlagComponent flag={gameState.flag} />
+    </>
+  );
 };
 
 ReactDOM.render(
