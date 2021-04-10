@@ -1,3 +1,4 @@
+import { Person } from "../person/Person";
 import { AgenderFlag } from "./AgenderFlag";
 import { AromanticFlag } from "./AromanticFlag";
 import { AsexualFlag } from "./AsexualFlag";
@@ -49,6 +50,38 @@ export function createIncompleteFlag(flag: Flag): IncompleteFlag {
     incompleteStripes: [{ ...flag.stripes[0], progress: 0 }],
     complete: false,
   };
+}
+
+export function chooseFlagForPerson(person: Person): IncompleteFlag {
+  const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
+
+  switch (tag) {
+    case "gay":
+    case "ally": {
+      return createIncompleteFlag(RainbowFlag);
+    }
+    case "bi": {
+      return createIncompleteFlag(BisexualFlag);
+    }
+    case "ace": {
+      return createIncompleteFlag(AsexualFlag);
+    }
+    case "poly": {
+      return createIncompleteFlag(PolysexualFlag);
+    }
+    case "pan": {
+      return createIncompleteFlag(PansexualFlag);
+    }
+    case "nb": {
+      return createIncompleteFlag(NonbinaryFlag);
+    }
+    case "genderfluid": {
+      return createIncompleteFlag(GenderfluidFlag);
+    }
+    case "trans": {
+      return createIncompleteFlag(TransgenderFlag);
+    }
+  }
 }
 
 export function updateIncompleteFlag(
