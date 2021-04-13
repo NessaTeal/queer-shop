@@ -83,30 +83,3 @@ export function chooseFlagForPerson(person: Person): IncompleteFlag {
     }
   }
 }
-
-export function updateIncompleteFlag(
-  flag: IncompleteFlag,
-  delta: number
-): IncompleteFlag {
-  if (flag.complete) {
-    return flag;
-  }
-
-  const currentStripe = flag.incompleteStripes.length - 1;
-  flag.incompleteStripes[currentStripe].progress += 0.0007 * delta;
-
-  if (flag.incompleteStripes[currentStripe].progress >= 1) {
-    const overflow = flag.incompleteStripes[currentStripe].progress - 1;
-    flag.incompleteStripes[currentStripe].progress = 1;
-    if (flag.incompleteStripes.length === flag.stripes.length) {
-      return { ...flag, complete: true };
-    }
-
-    flag.incompleteStripes.push({
-      ...flag.stripes[currentStripe + 1],
-      progress: overflow,
-    });
-  }
-
-  return { ...flag };
-}
