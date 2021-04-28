@@ -1,85 +1,97 @@
-import { Person } from "../person/Person";
-import { AgenderFlag } from "./AgenderFlag";
-import { AromanticFlag } from "./AromanticFlag";
-import { AsexualFlag } from "./AsexualFlag";
-import { BisexualFlag } from "./BisexualFlag";
-import { GenderfluidFlag } from "./GenderfluidFlag";
-import { GenderqueerFlag } from "./GenderqueerFlag";
-import { NonbinaryFlag } from "./NonbinaryFlag";
-import { PansexualFlag } from "./PansexualFlag";
-import { PolysexualFlag } from "./PolysexualFlag";
-import { RainbowFlag } from "./RainbowFlag";
-import { TransgenderFlag } from "./TransgenderFlag";
+import { Application, Graphics } from "pixi.js";
 
-export type Flag = {
+export abstract class Flag {
   ratio: number;
   stripes: Array<Stripe>;
-};
+  complete: boolean;
+  progress: number;
+  graphics!: Array<Graphics>;
+
+  constructor(ratio: number, stripes: Array<Stripe>) {
+    this.ratio = ratio;
+    this.stripes = stripes;
+    this.complete = false;
+    this.progress = 0;
+  }
+
+  init(app: Application): void {
+    let offset = 0;
+
+    const height = 777 / this.ratio;
+
+    this.graphics = this.stripes.map((s) => {
+      const stripe = new Graphics();
+      stripe.beginFill(s.color);
+      stripe.drawRect(0, height * offset, 777, height * s.width);
+      stripe.scale.set(0, 1);
+      stripe.endFill();
+      offset += s.width;
+      return stripe;
+    });
+
+    app.stage.addChild(...this.graphics);
+  }
+
+  update(delta: number): void {
+    this.progress += delta * 0.0007;
+    let progressRequired = 0;
+
+    for (let i = 0; i < this.stripes.length; i++) {
+      const stripe = this.stripes[i];
+
+      const progressSoFar = Math.max(
+        0,
+        Math.min(1, (this.progress - progressRequired) / stripe.width)
+      );
+
+      this.graphics[i].scale.set(progressSoFar, 1);
+
+      if (progressSoFar === 1) {
+        progressRequired += stripe.width;
+      } else {
+        break;
+      }
+    }
+  }
+
+  delete(): void {
+    this.graphics.forEach((g) => g.destroy());
+  }
+}
 
 export type Stripe = {
   width: number;
-  color: string;
+  color: number;
 };
 
-export type IncompleteStripe = Stripe & {
-  progress: number;
-};
+// export function chooseFlagForPerson(person: Person): Flag {
+//   const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
 
-export const allFlags = [
-  RainbowFlag,
-  BisexualFlag,
-  AgenderFlag,
-  AromanticFlag,
-  AsexualFlag,
-  GenderfluidFlag,
-  GenderqueerFlag,
-  NonbinaryFlag,
-  PansexualFlag,
-  PolysexualFlag,
-  TransgenderFlag,
-];
-
-export type IncompleteFlag = Flag & {
-  incompleteStripes: Array<IncompleteStripe>;
-  complete: boolean;
-};
-
-export function createIncompleteFlag(flag: Flag): IncompleteFlag {
-  return {
-    ...flag,
-    incompleteStripes: [{ ...flag.stripes[0], progress: 0 }],
-    complete: false,
-  };
-}
-
-export function chooseFlagForPerson(person: Person): IncompleteFlag {
-  const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
-
-  switch (tag) {
-    case "gay":
-    case "ally": {
-      return createIncompleteFlag(RainbowFlag);
-    }
-    case "bi": {
-      return createIncompleteFlag(BisexualFlag);
-    }
-    case "ace": {
-      return createIncompleteFlag(AsexualFlag);
-    }
-    case "poly": {
-      return createIncompleteFlag(PolysexualFlag);
-    }
-    case "pan": {
-      return createIncompleteFlag(PansexualFlag);
-    }
-    case "nb": {
-      return createIncompleteFlag(NonbinaryFlag);
-    }
-    case "genderfluid": {
-      return createIncompleteFlag(GenderfluidFlag);
-    }
-    case "trans": {
-      return createIncompleteFlag(TransgenderFlag);
-    }
-  }
-}
+//   switch (tag) {
+//     case "gay":
+//     case "ally": {
+//       return new RainbowFlag();
+//     }
+//     case "bi": {
+//       return new BisexualFlag();
+//     }
+//     case "ace": {
+//       return new AsexualFlag();
+//     }
+//     case "poly": {
+//       return new PolysexualFlag();
+//     }
+//     case "pan": {
+//       return new PansexualFlag();
+//     }
+//     case "nb": {
+//       return new NonbinaryFlag();
+//     }
+//     case "genderfluid": {
+//       return new GenderfluidFlag();
+//     }
+//     case "trans": {
+//       return new TransgenderFlag();
+//     }
+//   }
+// }

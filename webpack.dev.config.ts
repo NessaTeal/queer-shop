@@ -9,27 +9,23 @@ const config: webpack.Configuration = {
   output: {
     publicPath: "/",
   },
-  entry: "./src/index.tsx",
+  entry: "./src/index.ts",
   module: {
     rules: [
       {
-        test: /\.(ts|js)x?$/i,
+        test: /\.(ts|js)$/i,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
-            presets: [
-              "@babel/preset-env",
-              "@babel/preset-react",
-              "@babel/preset-typescript",
-            ],
+            presets: ["@babel/preset-env", "@babel/preset-typescript"],
           },
         },
       },
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: [".ts", ".js"],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -40,7 +36,7 @@ const config: webpack.Configuration = {
       async: false,
     }),
     new ESLintPlugin({
-      extensions: ["js", "jsx", "ts", "tsx"],
+      extensions: ["js", "ts"],
     }),
   ],
   devtool: "inline-source-map",

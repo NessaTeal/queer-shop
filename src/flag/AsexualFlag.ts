@@ -1,23 +1,24 @@
 import { Flag } from "./Flag";
 
-export const AsexualFlag: Flag = {
-  ratio: 5 / 3,
-  stripes: [
-    {
-      width: 1 / 4,
-      color: "#000000",
-    },
-    {
-      width: 1 / 4,
-      color: "#a3a3a3",
-    },
-    {
-      width: 1 / 4,
-      color: "#ffffff",
-    },
-    {
-      width: 1 / 4,
-      color: "#800080",
-    },
-  ],
-};
+export class AsexualFlag extends Flag {
+  constructor() {
+    super(5 / 3, [
+      {
+        width: 1 / 4,
+        color: 0x000000,
+      },
+      {
+        width: 1 / 4,
+        color: 0xa3a3a3,
+      },
+      {
+        width: 1 / 4,
+        color: 0xffffff,
+      },
+      {
+        width: 1 / 4,
+        color: 0x800080,
+      },
+    ]);
+  }
+}
