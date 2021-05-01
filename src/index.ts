@@ -4,8 +4,8 @@ import { generatePerson } from "./person/Person";
 import * as PIXI from "pixi.js";
 
 const app = new PIXI.Application({
-  width: 777,
-  height: 1000,
+  width: 1920,
+  height: 1080,
   backgroundAlpha: 0,
 });
 
@@ -22,6 +22,7 @@ const gameState = new GameState({
 });
 
 gameState.flag.init(app);
+gameState.person.init(app);
 
 const gameloop = (timestamp: number) => {
   const delta = timestamp - lastTimestamp;
