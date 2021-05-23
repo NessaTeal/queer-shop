@@ -5,6 +5,7 @@ import { AsexualFlag } from "../flag/AsexualFlag";
 import { BisexualFlag } from "../flag/BisexualFlag";
 import { Flag } from "../flag/Flag";
 import { GenderfluidFlag } from "../flag/GenderfluidFlag";
+import { GenderqueerFlag } from "../flag/GenderqueerFlag";
 import { NonbinaryFlag } from "../flag/NonbinaryFlag";
 import { PansexualFlag } from "../flag/PansexualFlag";
 import { PolysexualFlag } from "../flag/PolysexualFlag";
@@ -34,7 +35,8 @@ export type Tag =
   | "poly"
   | "genderfluid"
   | "agender"
-  | "aro";
+  | "aro"
+  | "genderqueer";
 
 export class Person {
   name: string;
@@ -109,7 +111,11 @@ export function generatePerson(): Person {
   }
 
   if (gender === "nb") {
-    tags.push("nb");
+    if (Math.random() > 0.5) {
+      tags.push("nb");
+    } else {
+      tags.push("genderqueer");
+    }
   } else if (gender === "genderfluid") {
     tags.push("genderfluid");
   }
@@ -182,6 +188,9 @@ export function generateFlagForPerson(person: Person, overflow: number): Flag {
     }
     case "aro": {
       return new AromanticFlag(overflow);
+    }
+    case "genderqueer": {
+      return new GenderqueerFlag(overflow);
     }
   }
 }
