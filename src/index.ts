@@ -16,7 +16,7 @@ let lastTimestamp = 0;
 const gameState = new GameState({
   person: generatePerson(),
   flag: new RainbowFlag(0),
-  fillSpeed: 0.0005,
+  fillSpeed: 0,
   money: 0,
   app,
 });

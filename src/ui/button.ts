@@ -4,17 +4,7 @@ import { GameText } from "./text";
 export class GameButton extends Graphics {
   text: GameText;
 
-  constructor({
-    color,
-    text,
-    x,
-    y,
-  }: {
-    color: number;
-    text: string;
-    x: number;
-    y: number;
-  }) {
+  constructor({ color, text, x, y }: { color: number; text: string; x: number; y: number }) {
     super();
     this.beginFill(color);
     this.drawRect(x, 0, 150, 50);

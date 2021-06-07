@@ -7,15 +7,7 @@ export abstract class Flag {
   progress: number;
   graphics!: Array<Graphics>;
 
-  constructor({
-    ratio,
-    stripes,
-    progress = 0,
-  }: {
-    ratio: number;
-    stripes: Array<Stripe>;
-    progress: number;
-  }) {
+  constructor({ ratio, stripes, progress = 0 }: { ratio: number; stripes: Array<Stripe>; progress: number }) {
     this.ratio = ratio;
     this.stripes = stripes;
     this.complete = false;
@@ -40,17 +32,14 @@ export abstract class Flag {
     container.addChild(...this.graphics);
   }
 
-  update(delta: number, fillSpeed: number): void {
-    this.progress += delta * fillSpeed;
+  update(fill: number): void {
+    this.progress += fill;
     let progressRequired = 0;
 
     for (let i = 0; i < this.stripes.length; i++) {
       const stripe = this.stripes[i];
 
-      const progressSoFar = Math.max(
-        0,
-        Math.min(1, (this.progress - progressRequired) / stripe.width)
-      );
+      const progressSoFar = Math.max(0, Math.min(1, (this.progress - progressRequired) / stripe.width));
 
       this.graphics[i].scale.set(progressSoFar, 1);
 

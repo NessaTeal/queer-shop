@@ -47,10 +47,10 @@ export class TopBar {
     }
 
     this.gameState.money -= 1;
-    this.gameState.fillSpeed *= 1.1;
+    this.gameState.fillSpeed += 0.00005;
   }
 
   getProgress(): void {
-    this.gameState.flag.progress += 0.1;
+    this.gameState.capacity += 0.2;
   }
 }
