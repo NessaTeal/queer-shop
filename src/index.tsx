@@ -1,9 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { allFlags } from "./flag/Flag";
 import { FlagComponent } from "./flag/FlagComponent";
-import { RainbowFlag } from "./flag/RainbowFlag";
 
-const App = () => <FlagComponent flag={RainbowFlag} />;
+const App = () => (
+  <>
+    {allFlags.map((flag, index) => (
+      <div key={index} style={{ padding: "4px" }}>
+        <FlagComponent flag={flag} />
+      </div>
+    ))}
+  </>
+);
 
 ReactDOM.render(
   <React.StrictMode>
