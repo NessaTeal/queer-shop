@@ -1,4 +1,4 @@
-import { Application, Graphics } from "pixi.js";
+import { Container, Graphics } from "pixi.js";
 
 export abstract class Flag {
   ratio: number;
@@ -7,14 +7,22 @@ export abstract class Flag {
   progress: number;
   graphics!: Array<Graphics>;
 
-  constructor(ratio: number, stripes: Array<Stripe>) {
+  constructor({
+    ratio,
+    stripes,
+    progress = 0,
+  }: {
+    ratio: number;
+    stripes: Array<Stripe>;
+    progress: number;
+  }) {
     this.ratio = ratio;
     this.stripes = stripes;
     this.complete = false;
-    this.progress = 0;
+    this.progress = progress;
   }
 
-  init(app: Application): void {
+  init(container: Container): void {
     let offset = 0;
 
     const height = 777 / this.ratio;
@@ -29,11 +37,11 @@ export abstract class Flag {
       return stripe;
     });
 
-    app.stage.addChild(...this.graphics);
+    container.addChild(...this.graphics);
   }
 
-  update(delta: number): void {
-    this.progress += delta * 0.0005;
+  update(delta: number, fillSpeed: number): void {
+    this.progress += delta * fillSpeed;
     let progressRequired = 0;
 
     for (let i = 0; i < this.stripes.length; i++) {

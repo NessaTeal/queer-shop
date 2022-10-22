@@ -1,4 +1,4 @@
-import { Application, Container, Text, TextStyle } from "pixi.js";
+import { Container, Text, TextStyle } from "pixi.js";
 import { AsexualFlag } from "../flag/AsexualFlag";
 import { BisexualFlag } from "../flag/BisexualFlag";
 import { Flag } from "../flag/Flag";
@@ -37,7 +37,7 @@ export class Person {
   gender: Gender;
   sexualPreference: SexualPreference;
   tags: Array<Tag>;
-  container!: Container;
+  personContainer!: Container;
 
   constructor({
     name,
@@ -56,38 +56,37 @@ export class Person {
     this.tags = tags;
   }
 
-  init(app: Application): void {
+  init(container: Container): void {
     const style = new TextStyle({
       fontFamily: "Helvetica",
       fontSize: 16,
     });
-    const container = new Container();
-    container.x = 800;
+    const personContainer = new Container();
 
     const name = new Text(`Name: ${this.name}`, style);
-    container.addChild(name);
+    personContainer.addChild(name);
 
     const gender = new Text(`Gender: ${this.gender}`, style);
     gender.y = 16;
-    container.addChild(gender);
+    personContainer.addChild(gender);
 
     const sexualPreference = new Text(
       `Sexual preference: ${this.sexualPreference}`,
       style
     );
     sexualPreference.y = 32;
-    container.addChild(sexualPreference);
+    personContainer.addChild(sexualPreference);
 
     const tags = new Text(`Tags: ${this.tags.join(", ")}`, style);
     tags.y = 48;
-    container.addChild(tags);
+    personContainer.addChild(tags);
 
-    app.stage.addChild(container);
-    this.container = container;
+    container.addChild(personContainer);
+    this.personContainer = personContainer;
   }
 
   delete(): void {
-    this.container.destroy();
+    this.personContainer.destroy();
   }
 }
 
@@ -139,34 +138,34 @@ export function generatePerson(): Person {
   });
 }
 
-export function generateFlagForPerson(person: Person): Flag {
+export function generateFlagForPerson(person: Person, overflow: number): Flag {
   const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
 
   switch (tag) {
     case "gay":
     case "ally": {
-      return new RainbowFlag();
+      return new RainbowFlag(overflow);
     }
     case "bi": {
-      return new BisexualFlag();
+      return new BisexualFlag(overflow);
     }
     case "ace": {
-      return new AsexualFlag();
+      return new AsexualFlag(overflow);
     }
     case "poly": {
-      return new PolysexualFlag();
+      return new PolysexualFlag(overflow);
     }
     case "pan": {
-      return new PansexualFlag();
+      return new PansexualFlag(overflow);
     }
     case "nb": {
-      return new NonbinaryFlag();
+      return new NonbinaryFlag(overflow);
     }
     case "genderfluid": {
-      return new GenderfluidFlag();
+      return new GenderfluidFlag(overflow);
     }
     case "trans": {
-      return new TransgenderFlag();
+      return new TransgenderFlag(overflow);
     }
   }
 }

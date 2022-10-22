@@ -15,14 +15,11 @@ let lastTimestamp = 0;
 
 const gameState = new GameState({
   person: generatePerson(),
-  flag: new RainbowFlag(),
-  fillSpeed: 0.001,
+  flag: new RainbowFlag(0),
+  fillSpeed: 0.0005,
   money: 0,
   app,
 });
-
-gameState.flag.init(app);
-gameState.person.init(app);
 
 const gameloop = (timestamp: number) => {
   const delta = timestamp - lastTimestamp;
