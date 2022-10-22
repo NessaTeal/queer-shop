@@ -2,7 +2,8 @@ import { GameState } from "./game-state";
 import { generatePerson } from "./person/Person";
 import * as PIXI from "pixi.js";
 import { FlagWithProgress } from "./flag/FlagWithProgress";
-import { rainbowFlagProps } from "./flag/flag-definitions";
+import { FLAG_DEFINITIONS } from "./flag/flag-definitions";
+import { FlagType } from "./flag/Flag";
 
 const app = new PIXI.Application({
   width: 1920,
@@ -16,7 +17,7 @@ let lastTimestamp = 0;
 
 const gameState = new GameState({
   person: generatePerson(),
-  flag: new FlagWithProgress(rainbowFlagProps, 0),
+  flag: new FlagWithProgress(FLAG_DEFINITIONS[FlagType.rainbow], 0),
   fillSpeed: 0,
   money: 0,
   app,

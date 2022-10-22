@@ -1,17 +1,6 @@
 import { Container, Text, TextStyle } from "pixi.js";
-import {
-  agenderFlagProps,
-  aromanticFlagProps,
-  asexualFlagProps,
-  bisexualFlagProps,
-  genderfluidFlagProps,
-  genderqueerFlagProps,
-  nonbinaryFlagProps,
-  pansexualFlagProps,
-  polysexualFlagProps,
-  rainbowFlagProps,
-  transgenderFlagProps,
-} from "../flag/flag-definitions";
+import { FlagType } from "../flag/Flag";
+import { FLAG_DEFINITIONS } from "../flag/flag-definitions";
 import { FlagWithProgress } from "../flag/FlagWithProgress";
 
 export type Gender = "male" | "female" | "nb" | "genderfluid" | "no";
@@ -140,37 +129,37 @@ export function generateFlagForPerson(person: Person, overflow: number): FlagWit
   switch (tag) {
     case "gay":
     case "ally": {
-      return new FlagWithProgress(rainbowFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.rainbow], overflow);
     }
     case "bi": {
-      return new FlagWithProgress(bisexualFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.bisexual], overflow);
     }
     case "ace": {
-      return new FlagWithProgress(asexualFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.asexual], overflow);
     }
     case "poly": {
-      return new FlagWithProgress(polysexualFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.polysexual], overflow);
     }
     case "pan": {
-      return new FlagWithProgress(pansexualFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.pansexual], overflow);
     }
     case "nb": {
-      return new FlagWithProgress(nonbinaryFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.nonbinary], overflow);
     }
     case "genderfluid": {
-      return new FlagWithProgress(genderfluidFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.genderfluid], overflow);
     }
     case "trans": {
-      return new FlagWithProgress(transgenderFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.transgender], overflow);
     }
     case "agender": {
-      return new FlagWithProgress(agenderFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.agender], overflow);
     }
     case "aro": {
-      return new FlagWithProgress(aromanticFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.aromantic], overflow);
     }
     case "genderqueer": {
-      return new FlagWithProgress(genderqueerFlagProps, overflow);
+      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.genderqueer], overflow);
     }
   }
 }

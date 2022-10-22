@@ -18,6 +18,7 @@ export class GameState {
   capacity: number;
   capacityDischargeSpeed: number;
   flagStorage: Record<FlagType, number>;
+  selectedFlag: FlagType;
 
   constructor({
     person,
@@ -39,6 +40,7 @@ export class GameState {
     this.app = app;
     this.capacity = 0;
     this.capacityDischargeSpeed = 0.4;
+    this.selectedFlag = FlagType.rainbow;
 
     this.flagStorage = {
       rainbow: 0,
