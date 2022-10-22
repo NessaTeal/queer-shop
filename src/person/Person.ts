@@ -1,5 +1,6 @@
 import { Container, Text, TextStyle } from "pixi.js";
 import { AgenderFlag } from "../flag/AgenderFlag";
+import { AromanticFlag } from "../flag/AromanticFlag";
 import { AsexualFlag } from "../flag/AsexualFlag";
 import { BisexualFlag } from "../flag/BisexualFlag";
 import { Flag } from "../flag/Flag";
@@ -32,7 +33,8 @@ export type Tag =
   | "pan"
   | "poly"
   | "genderfluid"
-  | "agender";
+  | "agender"
+  | "aro";
 
 export class Person {
   name: string;
@@ -128,6 +130,10 @@ export function generatePerson(): Person {
     }
   } else if (sexualPreference === "none") {
     tags.push("ace");
+
+    if (Math.random() > 0.5) {
+      tags.push("aro");
+    }
   }
 
   if (tags.length === 0) {
@@ -173,6 +179,9 @@ export function generateFlagForPerson(person: Person, overflow: number): Flag {
     }
     case "agender": {
       return new AgenderFlag(overflow);
+    }
+    case "aro": {
+      return new AromanticFlag(overflow);
     }
   }
 }
