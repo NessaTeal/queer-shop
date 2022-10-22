@@ -97,7 +97,7 @@ export class Person {
 }
 
 export function generatePerson(): Person {
-  const name = "Autumn";
+  const name = generateName();
   const gender = genders[Math.floor(Math.random() * genders.length)];
   const sexualPreference =
     orientations[Math.floor(Math.random() * orientations.length)];
@@ -193,4 +193,44 @@ export function generateFlagForPerson(person: Person, overflow: number): Flag {
       return new GenderqueerFlag(overflow);
     }
   }
+}
+
+const consonants = "qwrtpsdfghjklzxcvbnm" + "nnvvssrrttplkc";
+const vowels = "aeouiy" + "aaeeooi";
+const firstSyllables = ["cv", "vc", "vcv"];
+const secondSyllables = ["cvc", "vc", "vcv", "vvc", "cv"];
+
+function generateName(): string {
+  const firstSyllable = firstSyllables[
+    Math.floor(Math.random() * firstSyllables.length)
+  ]
+    .split("")
+    .map((l, i) => {
+      const letter = l === "v" ? getRandomVowel() : getRandomConsonant();
+      return i === 0 ? letter.toUpperCase() : letter;
+    })
+    .join("");
+
+  const secondSyllable = secondSyllables[
+    Math.floor(Math.random() * secondSyllables.length)
+  ]
+    .split("")
+    .map((l) => (l === "v" ? getRandomVowel() : getRandomConsonant()))
+    .join("");
+
+  return firstSyllable + secondSyllable;
+}
+
+function getRandomVowel(): string {
+  return getRandomLetter(vowels);
+}
+
+function getRandomConsonant(): string {
+  return getRandomLetter(consonants);
+}
+
+function getRandomLetter(letters: string): string {
+  const ran = Math.floor(Math.random() * letters.length);
+  console.log(ran);
+  return letters[ran];
 }
