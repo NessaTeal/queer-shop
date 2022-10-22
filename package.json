@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "start": "webpack serve --config webpack.dev.config.ts",
+    "dev": "webpack serve --config webpack.dev.config.ts",
+    "start": "http-server build -p $PORT",
     "build": "webpack --config webpack.prod.config.ts"
   },
   "husky": {
@@ -21,7 +22,8 @@
   },
   "dependencies": {
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "spa-http-server": "^0.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
