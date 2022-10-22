@@ -20,6 +20,10 @@ export type Stripe = {
   color: string;
 };
 
+export type IncompleteStripe = Stripe & {
+  progress: number;
+};
+
 export const allFlags = [
   RainbowFlag,
   BisexualFlag,
@@ -33,3 +37,43 @@ export const allFlags = [
   PolysexualFlag,
   TransgenderFlag,
 ];
+
+export type IncompleteFlag = Flag & {
+  incompleteStripes: Array<IncompleteStripe>;
+  complete: boolean;
+};
+
+export function createIncompleteFlag(flag: Flag): IncompleteFlag {
+  return {
+    ...flag,
+    incompleteStripes: [{ ...flag.stripes[0], progress: 0 }],
+    complete: false,
+  };
+}
+
+export function updateIncompleteFlag(
+  flag: IncompleteFlag,
+  delta: number
+): IncompleteFlag {
+  if (flag.complete) {
+    return flag;
+  }
+
+  const currentStripe = flag.incompleteStripes.length - 1;
+  flag.incompleteStripes[currentStripe].progress += 0.0007 * delta;
+
+  if (flag.incompleteStripes[currentStripe].progress >= 1) {
+    const overflow = flag.incompleteStripes[currentStripe].progress - 1;
+    flag.incompleteStripes[currentStripe].progress = 1;
+    if (flag.incompleteStripes.length === flag.stripes.length) {
+      return { ...flag, complete: true };
+    }
+
+    flag.incompleteStripes.push({
+      ...flag.stripes[currentStripe + 1],
+      progress: overflow,
+    });
+  }
+
+  return { ...flag };
+}
