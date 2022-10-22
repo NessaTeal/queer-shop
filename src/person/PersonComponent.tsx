@@ -6,7 +6,7 @@ export function PersonComponent({ person }: { person: Person }): JSX.Element {
     <div>
       <div>Name: {person.name}</div>
       <div>Gender: {person.gender}</div>
-      <div>Sexual orientation: {person.sexualOrientation}</div>
+      <div>Sexual preference: {person.sexualPreference}</div>
       <div style={{ display: "flex" }}>
         {"Tags: "}
         {person.tags.map((tag, index) => (

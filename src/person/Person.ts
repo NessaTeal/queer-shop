@@ -1,8 +1,8 @@
 export type Gender = "male" | "female" | "nb" | "genderfluid";
 const genders: Array<Gender> = ["male", "female", "nb", "genderfluid"];
 
-export type SexualOrientation = "male" | "female" | "many" | "all" | "none";
-const orientations: Array<SexualOrientation> = [
+export type SexualPreference = "male" | "female" | "many" | "all" | "none";
+const orientations: Array<SexualPreference> = [
   "male",
   "female",
   "many",
@@ -24,14 +24,14 @@ export type Tag =
 export type Person = {
   name: string;
   gender: Gender;
-  sexualOrientation: SexualOrientation;
+  sexualPreference: SexualPreference;
   tags: Array<Tag>;
 };
 
 export function generatePerson(): Person {
   const name = "Autumn";
   const gender = genders[Math.floor(Math.random() * genders.length)];
-  const sexualOrientation =
+  const sexualPreference =
     orientations[Math.floor(Math.random() * orientations.length)];
 
   const tags = Array<Tag>();
@@ -46,21 +46,21 @@ export function generatePerson(): Person {
     tags.push("genderfluid");
   }
 
-  if (gender === sexualOrientation) {
+  if (gender === sexualPreference) {
     tags.push("gay");
-  } else if (sexualOrientation === "many") {
+  } else if (sexualPreference === "many") {
     if (Math.random() > 0.2) {
       tags.push("poly");
     } else {
       tags.push("bi");
     }
-  } else if (sexualOrientation === "all") {
+  } else if (sexualPreference === "all") {
     if (Math.random() > 0.3) {
       tags.push("pan");
     } else {
       tags.push("bi");
     }
-  } else if (sexualOrientation === "none") {
+  } else if (sexualPreference === "none") {
     tags.push("ace");
   }
 
@@ -71,7 +71,7 @@ export function generatePerson(): Person {
   return {
     name,
     gender,
-    sexualOrientation,
+    sexualPreference,
     tags,
   };
 }
