@@ -33,7 +33,7 @@ export abstract class Flag {
   }
 
   update(delta: number): void {
-    this.progress += delta * 0.0007;
+    this.progress += delta * 0.0005;
     let progressRequired = 0;
 
     for (let i = 0; i < this.stripes.length; i++) {
@@ -63,35 +63,3 @@ export type Stripe = {
   width: number;
   color: number;
 };
-
-// export function chooseFlagForPerson(person: Person): Flag {
-//   const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
-
-//   switch (tag) {
-//     case "gay":
-//     case "ally": {
-//       return new RainbowFlag();
-//     }
-//     case "bi": {
-//       return new BisexualFlag();
-//     }
-//     case "ace": {
-//       return new AsexualFlag();
-//     }
-//     case "poly": {
-//       return new PolysexualFlag();
-//     }
-//     case "pan": {
-//       return new PansexualFlag();
-//     }
-//     case "nb": {
-//       return new NonbinaryFlag();
-//     }
-//     case "genderfluid": {
-//       return new GenderfluidFlag();
-//     }
-//     case "trans": {
-//       return new TransgenderFlag();
-//     }
-//   }
-// }

@@ -1,3 +1,14 @@
+import { Application, Container, Text, TextStyle } from "pixi.js";
+import { AsexualFlag } from "../flag/AsexualFlag";
+import { BisexualFlag } from "../flag/BisexualFlag";
+import { Flag } from "../flag/Flag";
+import { GenderfluidFlag } from "../flag/GenderfluidFlag";
+import { NonbinaryFlag } from "../flag/NonbinaryFlag";
+import { PansexualFlag } from "../flag/PansexualFlag";
+import { PolysexualFlag } from "../flag/PolysexualFlag";
+import { RainbowFlag } from "../flag/RainbowFlag";
+import { TransgenderFlag } from "../flag/TransgenderFlag";
+
 export type Gender = "male" | "female" | "nb" | "genderfluid";
 const genders: Array<Gender> = ["male", "female", "nb", "genderfluid"];
 
@@ -21,12 +32,64 @@ export type Tag =
   | "poly"
   | "genderfluid";
 
-export type Person = {
+export class Person {
   name: string;
   gender: Gender;
   sexualPreference: SexualPreference;
   tags: Array<Tag>;
-};
+  container!: Container;
+
+  constructor({
+    name,
+    gender,
+    sexualPreference,
+    tags,
+  }: {
+    name: string;
+    gender: Gender;
+    sexualPreference: SexualPreference;
+    tags: Array<Tag>;
+  }) {
+    this.name = name;
+    this.gender = gender;
+    this.sexualPreference = sexualPreference;
+    this.tags = tags;
+  }
+
+  init(app: Application): void {
+    const style = new TextStyle({
+      fontFamily: "Helvetica",
+      fontSize: 16,
+    });
+    const container = new Container();
+    container.x = 800;
+
+    const name = new Text(`Name: ${this.name}`, style);
+    container.addChild(name);
+
+    const gender = new Text(`Gender: ${this.gender}`, style);
+    gender.y = 16;
+    container.addChild(gender);
+
+    const sexualPreference = new Text(
+      `Sexual preference: ${this.sexualPreference}`,
+      style
+    );
+    sexualPreference.y = 32;
+    container.addChild(sexualPreference);
+
+    const tags = new Text(`Tags: ${this.tags.join(", ")}`, style);
+    tags.y = 48;
+    container.addChild(tags);
+
+    app.stage.addChild(container);
+    this.container = container;
+  }
+
+  delete(): void {
+    this.container.destroy();
+  }
+}
 
 export function generatePerson(): Person {
   const name = "Autumn";
@@ -68,10 +131,42 @@ export function generatePerson(): Person {
     tags.push("ally");
   }
 
-  return {
+  return new Person({
     name,
     gender,
     sexualPreference,
     tags,
-  };
+  });
+}
+
+export function generateFlagForPerson(person: Person): Flag {
+  const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
+
+  switch (tag) {
+    case "gay":
+    case "ally": {
+      return new RainbowFlag();
+    }
+    case "bi": {
+      return new BisexualFlag();
+    }
+    case "ace": {
+      return new AsexualFlag();
+    }
+    case "poly": {
+      return new PolysexualFlag();
+    }
+    case "pan": {
+      return new PansexualFlag();
+    }
+    case "nb": {
+      return new NonbinaryFlag();
+    }
+    case "genderfluid": {
+      return new GenderfluidFlag();
+    }
+    case "trans": {
+      return new TransgenderFlag();
+    }
+  }
 }

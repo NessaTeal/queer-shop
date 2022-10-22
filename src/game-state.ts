@@ -1,7 +1,6 @@
 import { Application } from "@pixi/app";
 import { Flag } from "./flag/Flag";
-import { RainbowFlag } from "./flag/RainbowFlag";
-import { Person } from "./person/Person";
+import { generateFlagForPerson, generatePerson, Person } from "./person/Person";
 
 export class GameState {
   person: Person;
@@ -35,7 +34,10 @@ export class GameState {
 
     if (this.flag.progress >= 1) {
       this.flag.delete();
-      this.flag = new RainbowFlag();
+      this.person.delete();
+      this.person = generatePerson();
+      this.person.init(this.app);
+      this.flag = generateFlagForPerson(this.person);
       this.flag.init(this.app);
     }
   }
