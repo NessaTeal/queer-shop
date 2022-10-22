@@ -20,7 +20,7 @@ export type FlagProps = {
   type: FlagType;
 };
 
-export abstract class Flag {
+export class Flag {
   ratio: number;
   stripes: Array<Stripe>;
   type: FlagType;

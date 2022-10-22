@@ -1,8 +1,10 @@
 import { Application } from "@pixi/app";
 import { Container } from "pixi.js";
 import { FlagType } from "./flag/Flag";
+import { FLAG_DEFINITIONS } from "./flag/flag-definitions";
 import { FlagWithProgress } from "./flag/FlagWithProgress";
-import { generateFlagForPerson, generatePerson, Person } from "./person/Person";
+import { Person } from "./person/Person";
+import { FlagSelector } from "./ui/flag-selector";
 import { TopBar } from "./ui/topbar";
 
 export class GameState {
@@ -14,11 +16,13 @@ export class GameState {
   topContainer: Container;
   flagContainer: Container;
   personContainer: Container;
+  flagSelectorContainer: Container;
   topBar: TopBar;
   capacity: number;
   capacityDischargeSpeed: number;
   flagStorage: Record<FlagType, number>;
   selectedFlag: FlagType;
+  flagSelector: FlagSelector;
 
   constructor({
     person,
@@ -73,7 +77,14 @@ export class GameState {
     this.personContainer = personContainer;
     person.init(personContainer);
 
-    app.stage.addChild(topContainer, flagContainer, personContainer);
+    const flagSelectorContainer = new Container();
+    flagSelectorContainer.position.set(800, 200);
+    this.flagSelectorContainer = flagSelectorContainer;
+    const flagSelector = new FlagSelector(this);
+    flagSelector.init(flagSelectorContainer);
+    this.flagSelector = flagSelector;
+
+    app.stage.addChild(topContainer, flagContainer, personContainer, flagSelectorContainer);
   }
 
   update(delta: number): void {
@@ -88,11 +99,9 @@ export class GameState {
       const overflow = this.flag.progress - 1;
       this.flagStorage[this.flag.type]++;
       this.flag.delete();
-      this.person.delete();
-      this.person = generatePerson();
-      this.person.init(this.personContainer);
-      this.flag = generateFlagForPerson(this.person, overflow);
+      this.flag = new FlagWithProgress(FLAG_DEFINITIONS[this.selectedFlag], overflow);
       this.flag.init(this.flagContainer);
+      this.flagSelector.updateFlagCount();
     }
   }
 }

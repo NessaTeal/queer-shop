@@ -196,6 +196,5 @@ function getRandomConsonant(): string {
 
 function getRandomLetter(letters: string): string {
   const ran = Math.floor(Math.random() * letters.length);
-  console.log(ran);
   return letters[ran];
 }

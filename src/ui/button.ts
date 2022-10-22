@@ -6,6 +6,7 @@ export class GameButton extends Graphics {
 
   constructor({ color, text, x, y }: { color: number; text: string; x: number; y: number }) {
     super();
+    this.x = x;
     this.beginFill(color);
     this.drawRect(x, 0, 150, 50);
     this.endFill();
@@ -16,5 +17,12 @@ export class GameButton extends Graphics {
     this.text.x = x + 5;
     this.text.y = y + 17;
     this.addChild(this.text);
+  }
+
+  setColor(color: number): void {
+    this.clear();
+    this.beginFill(color);
+    this.drawRect(this.x, 0, 150, 50);
+    this.endFill();
   }
 }

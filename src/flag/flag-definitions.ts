@@ -1,6 +1,6 @@
-import { FlagType } from "./Flag";
+import { FlagProps, FlagType } from "./Flag";
 
-export const FLAG_DEFINITIONS = {
+export const FLAG_DEFINITIONS: Record<FlagType, FlagProps> = {
   [FlagType.agender]: {
     ratio: 3 / 2,
     stripes: [
