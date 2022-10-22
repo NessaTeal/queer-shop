@@ -14,25 +14,17 @@ export class GameState {
   flagContainer: Container;
   personContainer: Container;
   topBar: TopBar;
+  capacity: number;
+  capacityDischargeSpeed: number;
 
-  constructor({
-    person,
-    flag,
-    fillSpeed,
-    money,
-    app,
-  }: {
-    person: Person;
-    flag: Flag;
-    fillSpeed: number;
-    money: number;
-    app: Application;
-  }) {
+  constructor({ person, flag, fillSpeed, money, app }: { person: Person; flag: Flag; fillSpeed: number; money: number; app: Application }) {
     this.person = person;
     this.flag = flag;
     this.fillSpeed = fillSpeed;
     this.money = money;
     this.app = app;
+    this.capacity = 0;
+    this.capacityDischargeSpeed = 0.4;
 
     const topContainer = new Container();
     this.topContainer = topContainer;
@@ -55,7 +47,11 @@ export class GameState {
   }
 
   update(delta: number): void {
-    this.flag.update(delta, this.fillSpeed);
+    const capacityDischarge = (Math.min(this.capacity, Math.max(this.capacity * this.capacityDischargeSpeed, 1)) * delta) / 1000;
+
+    this.capacity -= capacityDischarge;
+
+    this.flag.update(delta * this.fillSpeed + capacityDischarge);
     this.topBar.update();
 
     if (this.flag.progress >= 1) {

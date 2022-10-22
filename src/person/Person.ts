@@ -16,27 +16,9 @@ export type Gender = "male" | "female" | "nb" | "genderfluid" | "no";
 const genders: Array<Gender> = ["male", "female", "nb", "genderfluid", "no"];
 
 export type SexualPreference = "male" | "female" | "many" | "all" | "none";
-const orientations: Array<SexualPreference> = [
-  "male",
-  "female",
-  "many",
-  "all",
-  "none",
-];
+const orientations: Array<SexualPreference> = ["male", "female", "many", "all", "none"];
 
-export type Tag =
-  | "ally"
-  | "gay"
-  | "trans"
-  | "nb"
-  | "ace"
-  | "bi"
-  | "pan"
-  | "poly"
-  | "genderfluid"
-  | "agender"
-  | "aro"
-  | "genderqueer";
+export type Tag = "ally" | "gay" | "trans" | "nb" | "ace" | "bi" | "pan" | "poly" | "genderfluid" | "agender" | "aro" | "genderqueer";
 
 export class Person {
   name: string;
@@ -76,10 +58,7 @@ export class Person {
     gender.y = 16;
     personContainer.addChild(gender);
 
-    const sexualPreference = new Text(
-      `Sexual preference: ${this.sexualPreference}`,
-      style
-    );
+    const sexualPreference = new Text(`Sexual preference: ${this.sexualPreference}`, style);
     sexualPreference.y = 32;
     personContainer.addChild(sexualPreference);
 
@@ -99,8 +78,7 @@ export class Person {
 export function generatePerson(): Person {
   const name = generateName();
   const gender = genders[Math.floor(Math.random() * genders.length)];
-  const sexualPreference =
-    orientations[Math.floor(Math.random() * orientations.length)];
+  const sexualPreference = orientations[Math.floor(Math.random() * orientations.length)];
 
   const tags = Array<Tag>();
 
@@ -201,9 +179,7 @@ const firstSyllables = ["cv", "vc", "vcv"];
 const secondSyllables = ["cvc", "vc", "vcv", "vvc", "cv"];
 
 function generateName(): string {
-  const firstSyllable = firstSyllables[
-    Math.floor(Math.random() * firstSyllables.length)
-  ]
+  const firstSyllable = firstSyllables[Math.floor(Math.random() * firstSyllables.length)]
     .split("")
     .map((l, i) => {
       const letter = l === "v" ? getRandomVowel() : getRandomConsonant();
@@ -211,9 +187,7 @@ function generateName(): string {
     })
     .join("");
 
-  const secondSyllable = secondSyllables[
-    Math.floor(Math.random() * secondSyllables.length)
-  ]
+  const secondSyllable = secondSyllables[Math.floor(Math.random() * secondSyllables.length)]
     .split("")
     .map((l) => (l === "v" ? getRandomVowel() : getRandomConsonant()))
     .join("");
