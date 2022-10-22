@@ -4,11 +4,14 @@ import { createIncompleteFlag } from "./flag/Flag";
 import { IncompleteFlagComponent } from "./flag/IncompleteFlagComponent";
 import { RainbowFlag } from "./flag/RainbowFlag";
 import { increaseSpeed, updateGameState } from "./game-state";
+import { generatePerson } from "./person/Person";
+import { PersonComponent } from "./person/PersonComponent";
 
 let lastTimestamp = 0;
 
 const App = () => {
   const [gameState, setGameState] = useState({
+    person: generatePerson(),
     flag: createIncompleteFlag(RainbowFlag),
     fillSpeed: 0.001,
     money: 0,
@@ -26,13 +29,18 @@ const App = () => {
   }, []);
 
   return (
-    <>
-      <div>Money: {gameState.money}</div>
-      <button onClick={() => setGameState(increaseSpeed(gameState))}>
-        Increase speed (cost 1)
-      </button>
-      <IncompleteFlagComponent flag={gameState.flag} />
-    </>
+    <div style={{ display: "flex" }}>
+      <div>
+        <div>Money: {gameState.money}</div>
+        <button onClick={() => setGameState(increaseSpeed(gameState))}>
+          Increase speed (cost 1)
+        </button>
+        <IncompleteFlagComponent flag={gameState.flag} />
+      </div>
+      <div style={{ marginLeft: "20px" }}>
+        <PersonComponent person={gameState.person} />
+      </div>
+    </div>
   );
 };
 

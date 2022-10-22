@@ -1,7 +1,8 @@
-import { Flag, IncompleteFlag } from "./flag/Flag";
-import { RainbowFlag } from "./flag/RainbowFlag";
+import { chooseFlagForPerson, Flag, IncompleteFlag } from "./flag/Flag";
+import { generatePerson, Person } from "./person/Person";
 
 export type GameState = {
+  person: Person;
   flag: IncompleteFlag;
   fillSpeed: number;
   money: number;
@@ -17,7 +18,8 @@ export function updateGameState(
 
   const updatedFlag = updateIncompleteFlag(gameState, delta);
   if (updatedFlag.complete) {
-    newGameState.flag = createIncompleteFlag(RainbowFlag);
+    newGameState.person = generatePerson();
+    newGameState.flag = chooseFlagForPerson(newGameState.person);
     newGameState.money += 1;
   } else {
     newGameState.flag = updatedFlag;
