@@ -1,16 +1,18 @@
 import { Container, Text, TextStyle } from "pixi.js";
-import { AgenderFlag } from "../flag/AgenderFlag";
-import { AromanticFlag } from "../flag/AromanticFlag";
-import { AsexualFlag } from "../flag/AsexualFlag";
-import { BisexualFlag } from "../flag/BisexualFlag";
-import { Flag } from "../flag/Flag";
-import { GenderfluidFlag } from "../flag/GenderfluidFlag";
-import { GenderqueerFlag } from "../flag/GenderqueerFlag";
-import { NonbinaryFlag } from "../flag/NonbinaryFlag";
-import { PansexualFlag } from "../flag/PansexualFlag";
-import { PolysexualFlag } from "../flag/PolysexualFlag";
-import { RainbowFlag } from "../flag/RainbowFlag";
-import { TransgenderFlag } from "../flag/TransgenderFlag";
+import {
+  agenderFlagProps,
+  aromanticFlagProps,
+  asexualFlagProps,
+  bisexualFlagProps,
+  genderfluidFlagProps,
+  genderqueerFlagProps,
+  nonbinaryFlagProps,
+  pansexualFlagProps,
+  polysexualFlagProps,
+  rainbowFlagProps,
+  transgenderFlagProps,
+} from "../flag/flag-definitions";
+import { FlagWithProgress } from "../flag/FlagWithProgress";
 
 export type Gender = "male" | "female" | "nb" | "genderfluid" | "no";
 const genders: Array<Gender> = ["male", "female", "nb", "genderfluid", "no"];
@@ -132,43 +134,43 @@ export function generatePerson(): Person {
   });
 }
 
-export function generateFlagForPerson(person: Person, overflow: number): Flag {
+export function generateFlagForPerson(person: Person, overflow: number): FlagWithProgress {
   const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
 
   switch (tag) {
     case "gay":
     case "ally": {
-      return new RainbowFlag(overflow);
+      return new FlagWithProgress(rainbowFlagProps, overflow);
     }
     case "bi": {
-      return new BisexualFlag(overflow);
+      return new FlagWithProgress(bisexualFlagProps, overflow);
     }
     case "ace": {
-      return new AsexualFlag(overflow);
+      return new FlagWithProgress(asexualFlagProps, overflow);
     }
     case "poly": {
-      return new PolysexualFlag(overflow);
+      return new FlagWithProgress(polysexualFlagProps, overflow);
     }
     case "pan": {
-      return new PansexualFlag(overflow);
+      return new FlagWithProgress(pansexualFlagProps, overflow);
     }
     case "nb": {
-      return new NonbinaryFlag(overflow);
+      return new FlagWithProgress(nonbinaryFlagProps, overflow);
     }
     case "genderfluid": {
-      return new GenderfluidFlag(overflow);
+      return new FlagWithProgress(genderfluidFlagProps, overflow);
     }
     case "trans": {
-      return new TransgenderFlag(overflow);
+      return new FlagWithProgress(transgenderFlagProps, overflow);
     }
     case "agender": {
-      return new AgenderFlag(overflow);
+      return new FlagWithProgress(agenderFlagProps, overflow);
     }
     case "aro": {
-      return new AromanticFlag(overflow);
+      return new FlagWithProgress(aromanticFlagProps, overflow);
     }
     case "genderqueer": {
-      return new GenderqueerFlag(overflow);
+      return new FlagWithProgress(genderqueerFlagProps, overflow);
     }
   }
 }

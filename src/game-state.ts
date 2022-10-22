@@ -1,12 +1,13 @@
 import { Application } from "@pixi/app";
 import { Container } from "pixi.js";
-import { Flag } from "./flag/Flag";
+import { FlagType } from "./flag/Flag";
+import { FlagWithProgress } from "./flag/FlagWithProgress";
 import { generateFlagForPerson, generatePerson, Person } from "./person/Person";
 import { TopBar } from "./ui/topbar";
 
 export class GameState {
   person: Person;
-  flag: Flag;
+  flag: FlagWithProgress;
   fillSpeed: number;
   money: number;
   app: Application;
@@ -16,8 +17,21 @@ export class GameState {
   topBar: TopBar;
   capacity: number;
   capacityDischargeSpeed: number;
+  flagStorage: Record<FlagType, number>;
 
-  constructor({ person, flag, fillSpeed, money, app }: { person: Person; flag: Flag; fillSpeed: number; money: number; app: Application }) {
+  constructor({
+    person,
+    flag,
+    fillSpeed,
+    money,
+    app,
+  }: {
+    person: Person;
+    flag: FlagWithProgress;
+    fillSpeed: number;
+    money: number;
+    app: Application;
+  }) {
     this.person = person;
     this.flag = flag;
     this.fillSpeed = fillSpeed;
@@ -25,6 +39,20 @@ export class GameState {
     this.app = app;
     this.capacity = 0;
     this.capacityDischargeSpeed = 0.4;
+
+    this.flagStorage = {
+      rainbow: 0,
+      agender: 0,
+      asexual: 0,
+      transgender: 0,
+      aromantic: 0,
+      polysexual: 0,
+      pansexual: 0,
+      nonbinary: 0,
+      genderfluid: 0,
+      genderqueer: 0,
+      bisexual: 0,
+    };
 
     const topContainer = new Container();
     this.topContainer = topContainer;
@@ -56,7 +84,7 @@ export class GameState {
 
     if (this.flag.progress >= 1) {
       const overflow = this.flag.progress - 1;
-      this.money++;
+      this.flagStorage[this.flag.type]++;
       this.flag.delete();
       this.person.delete();
       this.person = generatePerson();
