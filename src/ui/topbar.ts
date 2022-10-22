@@ -1,40 +1,36 @@
-import { Container, Graphics, Text, TextStyle } from "pixi.js";
+import { Container } from "pixi.js";
 import { GameState } from "../game-state";
+import { GameButton } from "./button";
+import { GameText } from "./text";
 
 export class TopBar {
   gameState: GameState;
-  moneyCounter!: Text;
+  moneyCounter!: GameText;
 
   constructor(gameState: GameState) {
     this.gameState = gameState;
   }
 
   init(container: Container): void {
-    const increaseSpeedButton = new Graphics();
-    increaseSpeedButton.beginFill(0x00abcd);
-    increaseSpeedButton.drawRect(0, 0, 50, 20);
-    increaseSpeedButton.endFill();
-
-    increaseSpeedButton.interactive = true;
-    increaseSpeedButton.buttonMode = true;
+    const increaseSpeedButton = new GameButton({
+      color: 0x00abcd,
+      text: "Upgrade fill speed",
+      x: 0,
+      y: 0,
+    });
 
     increaseSpeedButton.on("click", () => this.upgradeSpeed());
 
-    const progressButton = new Graphics();
-    progressButton.beginFill(0x1233bb);
-    progressButton.drawRect(60, 0, 50, 20);
-    progressButton.endFill();
-
-    progressButton.interactive = true;
-    progressButton.buttonMode = true;
+    const progressButton = new GameButton({
+      color: 0x929dfc,
+      text: "Manual fill",
+      x: 150,
+      y: 0,
+    });
 
     progressButton.on("click", () => this.getProgress());
 
-    const style = new TextStyle({
-      fontFamily: "Helvetica",
-      fontSize: 16,
-    });
-    const moneyCounter = new Text(`Money: ${this.gameState.money}`, style);
+    const moneyCounter = new GameText(`Money: ${this.gameState.money}`);
     moneyCounter.x = 500;
     this.moneyCounter = moneyCounter;
 
