@@ -1,95 +1,85 @@
-import { Application } from "@pixi/app";
-import { Container } from "pixi.js";
-import { FlagType } from "./flag/BaseFlag";
-import { FLAG_DEFINITIONS } from "./flag/flag-definitions";
-import { FlagWithProgress } from "./flag/FlagWithProgress";
-import { Person } from "./person/Person";
-import { FlagSelector } from "./ui/flag-selector";
-import { TopBar } from "./ui/topbar";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { FLAG_DEFINITIONS } from './flag/flag-definitions';
+import { FlagWithProgress, useFlagWithProgress } from './flag/FlagWithProgress';
+import { useFrameTime } from './useFrameTime';
 
-export class GameState {
-  person: Person;
-  flag: FlagWithProgress;
-  fillSpeed: number;
-  money: number;
-  app: Application;
-  topContainer: Container;
-  flagContainer: Container;
-  personContainer: Container;
-  flagSelectorContainer: Container;
-  topBar: TopBar;
-  capacity: number;
-  capacityDischargeSpeed: number;
-  flagStorage: Record<FlagType, number>;
-  selectedFlag: FlagType;
-  flagSelector: FlagSelector;
-  brushSize: number;
+const initState = (flagWithProgress: FlagWithProgress) => ({
+  ...initialState,
+  flagWithProgress,
+});
 
-  constructor({ person, fillSpeed, money, app }: { person: Person; fillSpeed: number; money: number; app: Application }) {
-    this.person = person;
-    this.fillSpeed = fillSpeed;
-    this.money = money;
-    this.app = app;
-    this.capacity = 0;
-    this.capacityDischargeSpeed = 0.4;
-    this.selectedFlag = FlagType.rainbow;
-    this.brushSize = 15;
+const initialState = {
+  fillSpeed: 0,
+  money: 0,
+  capacity: 0,
+  capacityDischargeSpeed: 0.1,
+  flagStorage: {
+    rainbow: 0,
+    agender: 0,
+    asexual: 0,
+    transgender: 0,
+    aromantic: 0,
+    polysexual: 0,
+    pansexual: 0,
+    nonbinary: 0,
+    genderfluid: 0,
+    genderqueer: 0,
+    bisexual: 0,
+  },
+  selectedFlag: FLAG_DEFINITIONS.rainbow,
+  brushSize: 15,
+  flagWithProgress: {} as FlagWithProgress,
+};
 
-    this.flagStorage = {
-      rainbow: 0,
-      agender: 0,
-      asexual: 0,
-      transgender: 0,
-      aromantic: 0,
-      polysexual: 0,
-      pansexual: 0,
-      nonbinary: 0,
-      genderfluid: 0,
-      genderqueer: 0,
-      bisexual: 0,
-    };
+type GameState = typeof initialState;
 
-    const topContainer = new Container();
-    this.topContainer = topContainer;
+export const useGameState = (): [
+  GameState,
+  Dispatch<SetStateAction<GameState>>,
+] => {
+  const previousFrameTime = useRef(0);
+  const [flagWithProgress, initFlag, updateFlag, isDone] =
+    useFlagWithProgress();
+  const [gameState, setGameState] = useState(initState(flagWithProgress));
 
-    const topBar = new TopBar(this);
-    topBar.init(topContainer);
-    this.topBar = topBar;
+  useEffect(() => {
+    initFlag(gameState.selectedFlag, gameState.brushSize, 0);
+  }, []);
 
-    const flagContainer = new Container();
-    flagContainer.y = 50;
-    this.flagContainer = flagContainer;
-    this.flag = new FlagWithProgress(FLAG_DEFINITIONS[FlagType.rainbow], flagContainer, 0, this.brushSize);
+  const frameTime = useFrameTime();
 
-    const personContainer = new Container();
-    personContainer.x = 800;
-    this.personContainer = personContainer;
-    person.init(personContainer);
+  useEffect(() => {
+    const delta = (frameTime - previousFrameTime.current) / 1000;
+    previousFrameTime.current = frameTime;
 
-    const flagSelectorContainer = new Container();
-    flagSelectorContainer.position.set(800, 200);
-    this.flagSelectorContainer = flagSelectorContainer;
-    const flagSelector = new FlagSelector(this);
-    flagSelector.init(flagSelectorContainer);
-    this.flagSelector = flagSelector;
+    const capacityDischarge =
+      Math.min(
+        gameState.capacity,
+        Math.max(gameState.capacity * gameState.capacityDischargeSpeed, 5),
+      ) * delta;
 
-    app.stage.addChild(topContainer, flagContainer, personContainer, flagSelectorContainer);
+    updateFlag(
+      delta * gameState.fillSpeed + capacityDischarge,
+      gameState.brushSize,
+    );
+    setGameState((oldState) => ({
+      ...oldState,
+      flagWithProgress,
+      capacity: oldState.capacity - capacityDischarge,
+    }));
+  }, [frameTime]);
+
+  if (isDone) {
+    setGameState((oldState) => ({
+      ...oldState,
+      flagStorage: {
+        ...oldState.flagStorage,
+        [flagWithProgress.type]:
+          oldState.flagStorage[flagWithProgress.type] + 1,
+      },
+    }));
+    initFlag(gameState.selectedFlag, gameState.brushSize, 0);
   }
 
-  update(delta: number): void {
-    const capacityDischarge = (Math.min(this.capacity, Math.max(this.capacity * this.capacityDischargeSpeed, 1)) * delta) / 1000;
-
-    this.capacity -= capacityDischarge;
-
-    this.flag.update(delta * this.fillSpeed + capacityDischarge, this.brushSize);
-    this.topBar.update();
-
-    if (this.flag.isDone()) {
-      const overflow = this.flag.currentStripe.progress - 1;
-      this.flagStorage[this.flag.type]++;
-      this.flag.delete();
-      this.flag = new FlagWithProgress(FLAG_DEFINITIONS[this.selectedFlag], this.flagContainer, overflow, this.brushSize);
-      this.flagSelector.updateFlagCount();
-    }
-  }
-}
+  return [gameState, setGameState];
+};
