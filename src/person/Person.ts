@@ -1,4 +1,5 @@
 import { Container, Text, TextStyle } from "pixi.js";
+import { AgenderFlag } from "../flag/AgenderFlag";
 import { AsexualFlag } from "../flag/AsexualFlag";
 import { BisexualFlag } from "../flag/BisexualFlag";
 import { Flag } from "../flag/Flag";
@@ -9,8 +10,8 @@ import { PolysexualFlag } from "../flag/PolysexualFlag";
 import { RainbowFlag } from "../flag/RainbowFlag";
 import { TransgenderFlag } from "../flag/TransgenderFlag";
 
-export type Gender = "male" | "female" | "nb" | "genderfluid";
-const genders: Array<Gender> = ["male", "female", "nb", "genderfluid"];
+export type Gender = "male" | "female" | "nb" | "genderfluid" | "no";
+const genders: Array<Gender> = ["male", "female", "nb", "genderfluid", "no"];
 
 export type SexualPreference = "male" | "female" | "many" | "all" | "none";
 const orientations: Array<SexualPreference> = [
@@ -30,7 +31,8 @@ export type Tag =
   | "bi"
   | "pan"
   | "poly"
-  | "genderfluid";
+  | "genderfluid"
+  | "agender";
 
 export class Person {
   name: string;
@@ -98,7 +100,9 @@ export function generatePerson(): Person {
 
   const tags = Array<Tag>();
 
-  if (Math.random() > 0.8) {
+  if (gender === "no") {
+    tags.push("agender");
+  } else if (Math.random() > 0.8) {
     tags.push("trans");
   }
 
@@ -166,6 +170,9 @@ export function generateFlagForPerson(person: Person, overflow: number): Flag {
     }
     case "trans": {
       return new TransgenderFlag(overflow);
+    }
+    case "agender": {
+      return new AgenderFlag(overflow);
     }
   }
 }
