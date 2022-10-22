@@ -1,38 +1,68 @@
-import { Container } from "pixi.js";
-import { Flag, FlagProps } from "./Flag";
+import { Container, Graphics } from "pixi.js";
+import { BaseFlag, FlagProps } from "./BaseFlag";
 
-export class FlagWithProgress extends Flag {
-  progress: number;
+export class FlagWithProgress extends BaseFlag {
+  offset: number;
+  lastStripeIndex: number;
+  currentStripe: {
+    progress: number;
+    stripe: Graphics;
+  };
 
-  constructor(props: FlagProps, progress: number) {
-    super(props);
-    this.progress = progress;
+  constructor(props: FlagProps, container: Container, progress: number, brushSize: number) {
+    super(props, container);
+    const stripe = new Graphics();
+    stripe.beginFill(this.stripes[0].color);
+    const stripeWidth = Math.min(brushSize, this.stripes[0].offset);
+    stripe.drawRect(0, 0, 777, stripeWidth);
+    stripe.endFill();
+    stripe.scale.set(0, 1);
+    this.graphics.push(stripe);
+    this.container.addChild(stripe);
+    this.currentStripe = {
+      progress,
+      stripe,
+    };
+    this.offset = stripeWidth;
+    this.lastStripeIndex = 0;
   }
 
-  init(container: Container): void {
-    super.init(container);
-
-    this.graphics.map((g) => {
-      g.scale.set(0, 1);
-    });
-  }
-
-  update(fill: number): void {
-    this.progress += fill;
-    let progressRequired = 0;
-
-    for (let i = 0; i < this.stripes.length; i++) {
-      const stripe = this.stripes[i];
-
-      const progressSoFar = Math.max(0, Math.min(1, (this.progress - progressRequired) / stripe.width));
-
-      this.graphics[i].scale.set(progressSoFar, 1);
-
-      if (progressSoFar === 1) {
-        progressRequired += stripe.width;
-      } else {
-        break;
-      }
+  update(fill: number, brushSize: number): void {
+    if (this.lastStripeIndex === this.stripes.length) {
+      return;
     }
+
+    this.currentStripe.progress += fill;
+    this.currentStripe.stripe.scale.set(Math.min(1, this.currentStripe.progress), 1);
+
+    if (this.currentStripe.progress > 1) {
+      const stripe = new Graphics();
+      if (this.offset === this.stripes[this.lastStripeIndex].offset) {
+        this.lastStripeIndex++;
+
+        if (this.lastStripeIndex === this.stripes.length) {
+          return;
+        }
+      }
+      const chosenStripe = this.stripes[this.lastStripeIndex];
+      const stripeWidth = Math.min(brushSize, chosenStripe.offset - this.offset);
+
+      stripe.beginFill(chosenStripe.color);
+      stripe.drawRect(0, this.offset, 777, stripeWidth);
+      stripe.endFill();
+      stripe.scale.set(0, 1);
+      this.graphics.push(stripe);
+      this.container.addChild(stripe);
+      this.offset += stripeWidth;
+
+      this.currentStripe = {
+        progress: this.currentStripe.progress - 1,
+        stripe,
+      };
+    }
+  }
+
+  isDone(): boolean {
+    return this.lastStripeIndex === this.stripes.length;
   }
 }

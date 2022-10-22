@@ -42,7 +42,7 @@ export class TopBar {
   }
 
   upgradeSpeed(): void {
-    if (this.gameState.money < 1) {
+    if (this.gameState.money < 0) {
       return;
     }
 
@@ -51,6 +51,6 @@ export class TopBar {
   }
 
   getProgress(): void {
-    this.gameState.capacity += 0.2;
+    this.gameState.capacity += 25;
   }
 }

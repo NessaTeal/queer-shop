@@ -1,4 +1,4 @@
-import { FlagProps, FlagType } from "./Flag";
+import { FlagProps, FlagType } from "./BaseFlag";
 
 export const FLAG_DEFINITIONS: Record<FlagType, FlagProps> = {
   [FlagType.agender]: {

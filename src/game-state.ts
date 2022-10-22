@@ -1,6 +1,6 @@
 import { Application } from "@pixi/app";
 import { Container } from "pixi.js";
-import { FlagType } from "./flag/Flag";
+import { FlagType } from "./flag/BaseFlag";
 import { FLAG_DEFINITIONS } from "./flag/flag-definitions";
 import { FlagWithProgress } from "./flag/FlagWithProgress";
 import { Person } from "./person/Person";
@@ -23,28 +23,17 @@ export class GameState {
   flagStorage: Record<FlagType, number>;
   selectedFlag: FlagType;
   flagSelector: FlagSelector;
+  brushSize: number;
 
-  constructor({
-    person,
-    flag,
-    fillSpeed,
-    money,
-    app,
-  }: {
-    person: Person;
-    flag: FlagWithProgress;
-    fillSpeed: number;
-    money: number;
-    app: Application;
-  }) {
+  constructor({ person, fillSpeed, money, app }: { person: Person; fillSpeed: number; money: number; app: Application }) {
     this.person = person;
-    this.flag = flag;
     this.fillSpeed = fillSpeed;
     this.money = money;
     this.app = app;
     this.capacity = 0;
     this.capacityDischargeSpeed = 0.4;
     this.selectedFlag = FlagType.rainbow;
+    this.brushSize = 15;
 
     this.flagStorage = {
       rainbow: 0,
@@ -70,7 +59,7 @@ export class GameState {
     const flagContainer = new Container();
     flagContainer.y = 50;
     this.flagContainer = flagContainer;
-    flag.init(flagContainer);
+    this.flag = new FlagWithProgress(FLAG_DEFINITIONS[FlagType.rainbow], flagContainer, 0, this.brushSize);
 
     const personContainer = new Container();
     personContainer.x = 800;
@@ -92,15 +81,14 @@ export class GameState {
 
     this.capacity -= capacityDischarge;
 
-    this.flag.update(delta * this.fillSpeed + capacityDischarge);
+    this.flag.update(delta * this.fillSpeed + capacityDischarge, this.brushSize);
     this.topBar.update();
 
-    if (this.flag.progress >= 1) {
-      const overflow = this.flag.progress - 1;
+    if (this.flag.isDone()) {
+      const overflow = this.flag.currentStripe.progress - 1;
       this.flagStorage[this.flag.type]++;
       this.flag.delete();
-      this.flag = new FlagWithProgress(FLAG_DEFINITIONS[this.selectedFlag], overflow);
-      this.flag.init(this.flagContainer);
+      this.flag = new FlagWithProgress(FLAG_DEFINITIONS[this.selectedFlag], this.flagContainer, overflow, this.brushSize);
       this.flagSelector.updateFlagCount();
     }
   }

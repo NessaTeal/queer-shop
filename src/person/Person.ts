@@ -1,7 +1,4 @@
 import { Container, Text, TextStyle } from "pixi.js";
-import { FlagType } from "../flag/Flag";
-import { FLAG_DEFINITIONS } from "../flag/flag-definitions";
-import { FlagWithProgress } from "../flag/FlagWithProgress";
 
 export type Gender = "male" | "female" | "nb" | "genderfluid" | "no";
 const genders: Array<Gender> = ["male", "female", "nb", "genderfluid", "no"];
@@ -123,46 +120,46 @@ export function generatePerson(): Person {
   });
 }
 
-export function generateFlagForPerson(person: Person, overflow: number): FlagWithProgress {
-  const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
+// export function generateFlagForPerson(person: Person, overflow: number): FlagWithProgress {
+//   const tag = person.tags[Math.floor(Math.random() * person.tags.length)];
 
-  switch (tag) {
-    case "gay":
-    case "ally": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.rainbow], overflow);
-    }
-    case "bi": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.bisexual], overflow);
-    }
-    case "ace": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.asexual], overflow);
-    }
-    case "poly": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.polysexual], overflow);
-    }
-    case "pan": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.pansexual], overflow);
-    }
-    case "nb": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.nonbinary], overflow);
-    }
-    case "genderfluid": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.genderfluid], overflow);
-    }
-    case "trans": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.transgender], overflow);
-    }
-    case "agender": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.agender], overflow);
-    }
-    case "aro": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.aromantic], overflow);
-    }
-    case "genderqueer": {
-      return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.genderqueer], overflow);
-    }
-  }
-}
+//   switch (tag) {
+//     case "gay":
+//     case "ally": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.rainbow], overflow);
+//     }
+//     case "bi": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.bisexual], overflow);
+//     }
+//     case "ace": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.asexual], overflow);
+//     }
+//     case "poly": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.polysexual], overflow);
+//     }
+//     case "pan": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.pansexual], overflow);
+//     }
+//     case "nb": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.nonbinary], overflow);
+//     }
+//     case "genderfluid": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.genderfluid], overflow);
+//     }
+//     case "trans": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.transgender], overflow);
+//     }
+//     case "agender": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.agender], overflow);
+//     }
+//     case "aro": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.aromantic], overflow);
+//     }
+//     case "genderqueer": {
+//       return new FlagWithProgress(FLAG_DEFINITIONS[FlagType.genderqueer], overflow);
+//     }
+//   }
+// }
 
 const consonants = "qwrtpsdfghjklzxcvbnm" + "nnvvssrrttplkc";
 const vowels = "aeouiy" + "aaeeooi";

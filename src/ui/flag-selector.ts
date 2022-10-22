@@ -1,5 +1,6 @@
 import { Container } from "@pixi/display";
-import { Flag, FlagType } from "../flag/Flag";
+import { FlagType } from "../flag/BaseFlag";
+import { Flag } from "../flag/Flag";
 import { FLAG_DEFINITIONS } from "../flag/flag-definitions";
 import { GameState } from "../game-state";
 import { GameButton } from "./button";
@@ -30,8 +31,7 @@ export class FlagSelector {
       Object.entries(FLAG_DEFINITIONS).map(([key, flagProps]) => {
         const castedKey = key as FlagType;
         const flagContainer = new Container();
-        const flag = new Flag(flagProps);
-        flag.init(flagContainer);
+        new Flag(flagProps, flagContainer);
         flagContainer.scale.set(0.1, 0.1);
         flagContainer.x = 160;
         const button = new GameButton({
