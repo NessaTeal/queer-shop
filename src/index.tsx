@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { FlagComponent } from "./flag/FlagComponent";
+import { RainbowFlag } from "./flag/RainbowFlag";
 
-const App = () => (
-  <h1>My React and TypeScript App!! {new Date().toLocaleDateString()}</h1>
-);
+const App = () => <FlagComponent flag={RainbowFlag} />;
 
 ReactDOM.render(
   <React.StrictMode>
