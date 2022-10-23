@@ -1,3 +1,5 @@
+import { enumToArray } from '../util';
+
 export enum FlagType {
   rainbow = 'rainbow',
   agender = 'agender',
@@ -11,6 +13,8 @@ export enum FlagType {
   aromantic = 'aromantic',
   genderqueer = 'genderqueer',
 }
+
+export const FlagTypeArray = enumToArray(FlagType);
 
 export type FlagDefinition = {
   ratio: number;
