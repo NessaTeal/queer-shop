@@ -12,6 +12,8 @@ export enum FlagType {
   transgender = 'transgender',
   aromantic = 'aromantic',
   genderqueer = 'genderqueer',
+  lesbian = 'lesbian',
+  gay = 'gay',
 }
 
 export const FlagTypeArray = enumToArray(FlagType);
@@ -289,6 +291,74 @@ export const FLAG_DEFINITIONS = Object.fromEntries(
         },
       ],
       type: FlagType.transgender,
+    },
+    {
+      ratio: 3 / 2,
+      stripes: [
+        {
+          width: 1 / 7,
+          color: '#d62900',
+        },
+        {
+          width: 1 / 7,
+          color: '#ef7722',
+        },
+        {
+          width: 1 / 7,
+          color: '#ff9B55',
+        },
+        {
+          width: 1 / 7,
+          color: '#ffffff',
+        },
+        {
+          width: 1 / 7,
+          color: '#d262A5',
+        },
+        {
+          width: 1 / 7,
+          color: '#b65591',
+        },
+        {
+          width: 1 / 7,
+          color: '#a40062',
+        },
+      ],
+      type: FlagType.lesbian,
+    },
+    {
+      ratio: 3 / 2,
+      stripes: [
+        {
+          width: 1 / 7,
+          color: '#078d70',
+        },
+        {
+          width: 1 / 7,
+          color: '#26ceaa',
+        },
+        {
+          width: 1 / 7,
+          color: '#98e8c1',
+        },
+        {
+          width: 1 / 7,
+          color: '#ffffff',
+        },
+        {
+          width: 1 / 7,
+          color: '#7bade2',
+        },
+        {
+          width: 1 / 7,
+          color: '#5049cc',
+        },
+        {
+          width: 1 / 7,
+          color: '#3d1a78',
+        },
+      ],
+      type: FlagType.gay,
     },
   ].map((flagDefinition) => {
     const height = 777 / flagDefinition.ratio;
