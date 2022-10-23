@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import Konva from 'konva';
 import { Group, Rect } from 'react-konva';
 import {
@@ -8,6 +14,7 @@ import {
   StripeWithOffset,
 } from './flag-definitions';
 import { GameState } from '../game-state';
+import { DeltaContext } from '../gameloop/DeltaContext';
 
 function initFlag(
   brushSize: number,
@@ -42,11 +49,12 @@ export type FlagWithProgress = {
 export const useFlagWithProgress = (
   gameState: GameState,
   setGameState: Dispatch<SetStateAction<GameState>>,
-  delta: number,
 ): FlagWithProgress => {
   const [flag, setFlag] = useState(
     initFlag(gameState.brushSize, FLAG_DEFINITIONS.rainbow),
   );
+
+  const delta = useContext(DeltaContext);
 
   useEffect(() => {
     const capacityDischarge =

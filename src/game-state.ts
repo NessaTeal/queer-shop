@@ -27,11 +27,12 @@ const initialState = {
 export type GameState = typeof initialState;
 export type FullGameState = GameState & { flagWithProgress: FlagWithProgress };
 
-export const useGameState = (
-  delta: number,
-): [FullGameState, Dispatch<SetStateAction<GameState>>] => {
+export const useGameState = (): [
+  FullGameState,
+  Dispatch<SetStateAction<GameState>>,
+] => {
   const [gameState, setGameState] = useState(initialState);
-  const flagWithProgress = useFlagWithProgress(gameState, setGameState, delta);
+  const flagWithProgress = useFlagWithProgress(gameState, setGameState);
 
   return [{ ...gameState, flagWithProgress }, setGameState];
 };
