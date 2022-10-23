@@ -1,15 +1,9 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { FLAG_DEFINITIONS } from './flag/flag-definitions';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { FlagType, FLAG_DEFINITIONS } from './flag/flag-definitions';
 import { FlagWithProgress, useFlagWithProgress } from './flag/FlagWithProgress';
-import { useFrameTime } from './useFrameTime';
-
-const initState = (flagWithProgress: FlagWithProgress) => ({
-  ...initialState,
-  flagWithProgress,
-});
 
 const initialState = {
-  fillSpeed: 0,
+  fillSpeed: 10,
   money: 0,
   capacity: 0,
   capacityDischargeSpeed: 0.1,
@@ -25,61 +19,19 @@ const initialState = {
     genderfluid: 0,
     genderqueer: 0,
     bisexual: 0,
-  },
+  } as Record<FlagType, number>,
   selectedFlag: FLAG_DEFINITIONS.rainbow,
-  brushSize: 15,
-  flagWithProgress: {} as FlagWithProgress,
+  brushSize: 10,
 };
 
-type GameState = typeof initialState;
+export type GameState = typeof initialState;
+export type FullGameState = GameState & { flagWithProgress: FlagWithProgress };
 
-export const useGameState = (): [
-  GameState,
-  Dispatch<SetStateAction<GameState>>,
-] => {
-  const previousFrameTime = useRef(0);
-  const [flagWithProgress, initFlag, updateFlag, isDone] =
-    useFlagWithProgress();
-  const [gameState, setGameState] = useState(initState(flagWithProgress));
+export const useGameState = (
+  delta: number,
+): [FullGameState, Dispatch<SetStateAction<GameState>>] => {
+  const [gameState, setGameState] = useState(initialState);
+  const flagWithProgress = useFlagWithProgress(gameState, setGameState, delta);
 
-  useEffect(() => {
-    initFlag(gameState.selectedFlag, gameState.brushSize, 0);
-  }, []);
-
-  const frameTime = useFrameTime();
-
-  useEffect(() => {
-    const delta = (frameTime - previousFrameTime.current) / 1000;
-    previousFrameTime.current = frameTime;
-
-    const capacityDischarge =
-      Math.min(
-        gameState.capacity,
-        Math.max(gameState.capacity * gameState.capacityDischargeSpeed, 5),
-      ) * delta;
-
-    updateFlag(
-      delta * gameState.fillSpeed + capacityDischarge,
-      gameState.brushSize,
-    );
-    setGameState((oldState) => ({
-      ...oldState,
-      flagWithProgress,
-      capacity: oldState.capacity - capacityDischarge,
-    }));
-  }, [frameTime]);
-
-  if (isDone) {
-    setGameState((oldState) => ({
-      ...oldState,
-      flagStorage: {
-        ...oldState.flagStorage,
-        [flagWithProgress.type]:
-          oldState.flagStorage[flagWithProgress.type] + 1,
-      },
-    }));
-    initFlag(gameState.selectedFlag, gameState.brushSize, 0);
-  }
-
-  return [gameState, setGameState];
+  return [{ ...gameState, flagWithProgress }, setGameState];
 };

@@ -1,91 +1,117 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Konva from 'konva';
 import { Group, Rect } from 'react-konva';
-import { FlagDefinition, FlagType, StripeWithOffset } from './flag-definitions';
+import {
+  FlagDefinition,
+  FlagType,
+  FLAG_DEFINITIONS,
+  StripeWithOffset,
+} from './flag-definitions';
+import { GameState } from '../game-state';
 
-const initialState = {
-  offset: 0,
-  lastStripeIndex: -1,
-  stripes: Array<StripeWithOffset>(),
-  finishedStripes: Array<Konva.NodeConfig>(),
-  currentStripe: {} as Konva.NodeConfig & {
+function initFlag(
+  brushSize: number,
+  flagDefinition: FlagDefinition,
+): FlagWithProgress {
+  const stripeWidth = Math.min(brushSize, flagDefinition.stripes[0].offset);
+  return {
+    offset: stripeWidth,
+    lastStripeIndex: 0,
+    finishedStripes: [],
+    currentStripe: {
+      fill: flagDefinition.stripes[0].color,
+      height: stripeWidth,
+      progress: 0,
+    },
+    stripes: flagDefinition.stripes,
+    type: flagDefinition.type,
+  };
+}
+
+export type FlagWithProgress = {
+  offset: number;
+  lastStripeIndex: number;
+  stripes: Array<StripeWithOffset>;
+  finishedStripes: Array<Konva.NodeConfig>;
+  currentStripe: Konva.NodeConfig & {
     progress: number;
-  },
-  type: FlagType.rainbow,
+  };
+  type: FlagType;
 };
 
-export type FlagWithProgress = typeof initialState;
+export const useFlagWithProgress = (
+  gameState: GameState,
+  setGameState: Dispatch<SetStateAction<GameState>>,
+  delta: number,
+): FlagWithProgress => {
+  const [flag, setFlag] = useState(
+    initFlag(gameState.brushSize, FLAG_DEFINITIONS.rainbow),
+  );
 
-export const useFlagWithProgress = (): [
-  FlagWithProgress,
-  (flagDefinition: FlagDefinition, brushSize: number, progress: number) => void,
-  (delta: number, brushSize: number) => void,
-  boolean,
-] => {
-  const [flag, setFlag] = useState(initialState);
+  useEffect(() => {
+    const capacityDischarge =
+      Math.min(
+        gameState.capacity,
+        Math.max(gameState.capacity * gameState.capacityDischargeSpeed, 5),
+      ) * delta;
+    setGameState((oldState) => ({
+      ...oldState,
+      capacity: oldState.capacity - capacityDischarge,
+    }));
 
-  const initFlag = (
-    flagDefinition: FlagDefinition,
-    brushSize: number,
-    progress: number,
-  ) => {
-    const stripeWidth = Math.min(brushSize, flagDefinition.stripes[0].offset);
-    setFlag({
-      offset: stripeWidth,
-      lastStripeIndex: 0,
-      finishedStripes: [],
-      currentStripe: {
-        fill: flagDefinition.stripes[0].color,
-        height: stripeWidth,
-        progress,
-      },
-      stripes: flagDefinition.stripes,
-      type: flagDefinition.type,
-    });
-  };
+    let fill = delta * gameState.fillSpeed + capacityDischarge;
 
-  const updateFlag = (fill: number, brushSize: number) => {
-    if (flag.lastStripeIndex === flag.stripes.length) {
-      return;
-    }
+    let flagToWork = JSON.parse(JSON.stringify(flag)) as FlagWithProgress;
 
     while (fill > 0) {
-      const notch = 1 - flag.currentStripe.progress;
-      flag.currentStripe.progress += fill;
-      fill -= Math.min(notch, fill);
+      const notch = Math.min(1 - flagToWork.currentStripe.progress, fill);
+      flagToWork.currentStripe.progress += notch;
+      fill -= notch;
 
-      if (flag.currentStripe.progress > 1) {
-        flag.finishedStripes.push({ ...flag.currentStripe, width: 777 });
-        if (flag.offset === flag.stripes[flag.lastStripeIndex].offset) {
-          flag.lastStripeIndex++;
+      if (fill > 0) {
+        flagToWork.finishedStripes.push({
+          ...flagToWork.currentStripe,
+          width: 777,
+        });
+        if (
+          flagToWork.offset ===
+          flagToWork.stripes[flagToWork.lastStripeIndex].offset
+        ) {
+          flagToWork.lastStripeIndex++;
 
-          if (flag.lastStripeIndex === flag.stripes.length) {
-            return;
+          if (flagToWork.lastStripeIndex === flagToWork.stripes.length) {
+            setGameState((oldState) => ({
+              ...oldState,
+              flagStorage: {
+                ...oldState.flagStorage,
+                [flagToWork.type]: oldState.flagStorage[flagToWork.type] + 1,
+              },
+            }));
+            flagToWork = initFlag(gameState.brushSize, gameState.selectedFlag);
+            setFlag(flag);
+            continue;
           }
         }
-        const chosenStripe = flag.stripes[flag.lastStripeIndex];
+        const chosenStripe = flagToWork.stripes[flagToWork.lastStripeIndex];
         const stripeWidth = Math.min(
-          brushSize,
-          chosenStripe.offset - flag.offset,
+          gameState.brushSize,
+          chosenStripe.offset - flagToWork.offset,
         );
 
-        flag.currentStripe = {
+        flagToWork.currentStripe = {
           fill: chosenStripe.color,
           height: stripeWidth,
-          y: flag.offset,
-          progress: flag.currentStripe.progress - 1,
+          y: flagToWork.offset,
+          progress: flagToWork.currentStripe.progress - 1,
         };
-        flag.offset += stripeWidth;
+        flagToWork.offset += stripeWidth;
       }
     }
-  };
 
-  return [
-    flag,
-    initFlag,
-    updateFlag,
-    flag.lastStripeIndex === flag.stripes.length,
-  ];
+    setFlag(flagToWork);
+  }, [delta]);
+
+  return flag;
 };
 
 export function renderFlagWithProgress(flagWithProgress: FlagWithProgress) {

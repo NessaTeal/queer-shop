@@ -4,10 +4,12 @@ import { FlagDefinition } from '../flag/flag-definitions';
 import { renderFlagWithProgress } from '../flag/FlagWithProgress';
 import { useGameState } from '../game-state';
 import { FlagSelector } from '../ui/FlagSelector';
+import { useDelta } from '../useDelta';
 import './style.css';
 
 const App: React.FC = () => {
-  const [gameState, setGameState] = useGameState();
+  const delta = useDelta();
+  const [gameState, setGameState] = useGameState(delta);
 
   return (
     <>
