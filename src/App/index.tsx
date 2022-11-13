@@ -43,7 +43,7 @@ export function App(): JSX.Element {
       </button>
       <Stage width={1920} height={1080}>
         <Layer>
-          {renderFlagWithProgress(gameState.flagWithProgress)}
+          {renderFlagWithProgress(gameState)}
           <FlagSelector
             selectedFlag={gameState.selectedFlag.type}
             selectFlag={(flagDefinition: FlagDefinition) => {

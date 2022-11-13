@@ -17,9 +17,12 @@ const initialState = {
   ),
   selectedFlag: FLAG_DEFINITIONS.rainbow,
   brushSize: 10,
+  timeToShowRecentFlag: 0,
 };
 
-export type GameState = typeof initialState;
+export type GameState = typeof initialState & {
+  recentlyFinishedFlag?: FlagType;
+};
 export type FullGameState = GameState & { flagWithProgress: FlagWithProgress };
 
 export const useGameState = (): [

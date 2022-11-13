@@ -40,7 +40,11 @@ export function FlagSelector({
               }}
             />
             <GameText x={250} y={15} text={flagStorage[castedKey].toString()} />
-            <Flag flagDefinition={flagDefinition} x={160} />
+            <Flag
+              flagDefinition={flagDefinition}
+              x={160}
+              scale={{ x: 0.1, y: 0.1 }}
+            />
           </Group>
         );
       })}

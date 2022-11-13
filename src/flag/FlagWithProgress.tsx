@@ -13,8 +13,9 @@ import {
   FLAG_DEFINITIONS,
   StripeWithOffset,
 } from './flag-definitions';
-import { GameState } from '../game-state';
+import { FullGameState, GameState } from '../game-state';
 import { DeltaContext } from '../gameloop/DeltaContext';
+import { Flag } from './Flag';
 
 function initFlag(
   brushSize: number,
@@ -57,6 +58,20 @@ export const useFlagWithProgress = (
   const delta = useContext(DeltaContext);
 
   useEffect(() => {
+    if (gameState.timeToShowRecentFlag > 0) {
+      const newTimeToShowRecentFlag = gameState.timeToShowRecentFlag - delta;
+
+      setGameState((oldState) => ({
+        ...oldState,
+        timeToShowRecentFlag: newTimeToShowRecentFlag,
+        recentlyFinishedFlag:
+          newTimeToShowRecentFlag < 0
+            ? undefined
+            : oldState.recentlyFinishedFlag,
+      }));
+      return;
+    }
+
     const capacityDischarge =
       Math.min(
         gameState.capacity,
@@ -90,6 +105,8 @@ export const useFlagWithProgress = (
           if (flagToWork.lastStripeIndex === flagToWork.stripes.length) {
             setGameState((oldState) => ({
               ...oldState,
+              recentlyFinishedFlag: flag.type,
+              timeToShowRecentFlag: 0.3,
               flagStorage: {
                 ...oldState.flagStorage,
                 [flagToWork.type]: oldState.flagStorage[flagToWork.type] + 1,
@@ -122,8 +139,13 @@ export const useFlagWithProgress = (
   return flag;
 };
 
-export function renderFlagWithProgress(flagWithProgress: FlagWithProgress) {
-  return (
+export function renderFlagWithProgress({
+  flagWithProgress,
+  recentlyFinishedFlag,
+}: FullGameState) {
+  return recentlyFinishedFlag ? (
+    <Flag flagDefinition={FLAG_DEFINITIONS[recentlyFinishedFlag]} />
+  ) : (
     <Group>
       {flagWithProgress.finishedStripes.map((s, index) => (
         <Rect key={index} {...s}></Rect>

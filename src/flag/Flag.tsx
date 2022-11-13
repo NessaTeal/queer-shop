@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Group, Rect } from 'react-konva';
 import Konva from 'konva';
 import { FlagDefinition } from './flag-definitions';
@@ -9,7 +9,7 @@ interface FlagProps extends Konva.NodeConfig {
 
 export function Flag({ flagDefinition, ...rest }: FlagProps) {
   return (
-    <Group {...rest} scale={{ x: 0.1, y: 0.1 }}>
+    <Group {...rest}>
       {flagDefinition.stripes.map((s, i) => (
         <Rect
           key={i}
