@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Group, Rect } from 'react-konva';
 import Konva from 'konva';
 import { FlagDefinition } from './flag-definitions';
