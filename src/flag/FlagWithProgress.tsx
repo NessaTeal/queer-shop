@@ -69,7 +69,6 @@ export const useFlagWithProgress = (
             ? undefined
             : oldState.recentlyFinishedFlag,
       }));
-      return;
     }
 
     const capacityDischarge =
